@@ -9,6 +9,7 @@
 [![R-CMD-check-Mac-OSX](https://img.shields.io/github/workflow/status/jeffreyhanson/surveyvoi/Mac%20OSX/master.svg?label=Mac%20OSX)](https://github.com/jeffreyhanson/surveyvoi/actions)
 [![Coverage
 Status](https://codecov.io/github/jeffreyhanson/surveyvoi/coverage.svg?branch=master)](https://codecov.io/github/jeffreyhanson/surveyvoi?branch=master)
+[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/surveyvoi)](https://CRAN.R-project.org/package=surveyvoi)
 
 The *surveyvoi* package is a decision support tool for prioritizing
 sites for ecological surveys based on their potential to improve plans
@@ -23,7 +24,9 @@ coverage, diversity of sampled environmental conditions) and by
 maximizing value of information. After generating plans for surveys,
 they can also be evaluated using value of information analysis. Please
 note that several functions depend on the ‘Gurobi’ optimization software
-(available from <https://www.gurobi.com>).
+(available from <https://www.gurobi.com>). Additionally, the JAGS
+software (available from <https://mcmc-jags.sourceforge.io/>) is
+required to fit hierarchical generalized linear models.
 
 ## Installation
 

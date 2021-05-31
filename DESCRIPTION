@@ -1,6 +1,6 @@
 Package: surveyvoi
 Type: Package
-Version: 1.0.2
+Version: 1.0.3
 Title: Survey Value of Information
 Description: Decision support tool for prioritizing sites for ecological
     surveys based on their potential to improve plans for conserving
@@ -13,7 +13,8 @@ Description: Decision support tool for prioritizing sites for ecological
     algorithms. After generating such survey plans, they can be evaluated using
     conditions) and maximizing value of information. Please note that several
     functions depend on the 'Gurobi' optimization software (available from
-    <https://www.gurobi.com>). Additionally, the JAGS software (available from <https://mcmc-jags.sourceforge.io/>) is required to fit hierarchical
+    <https://www.gurobi.com>). Additionally, the JAGS software (available from
+    <https://mcmc-jags.sourceforge.io/>) is required to fit hierarchical
     generalized linear models.
 Authors@R: c(person(c('Jeffrey', 'O'), 'Hanson',
                email='jeffrey.hanson@uqconnect.edu.au', role = c('aut', 'cre'),
@@ -29,13 +30,12 @@ Authors@R: c(person(c('Jeffrey', 'O'), 'Hanson',
                comment = c(ORCID = '0000-0002-3901-9513')),
              person('Free Software Foundation, Inc', role = c('ctb', 'cph'),
                comment = 'gmp'))
-Imports: utils, methods, stats, parallel, progress (>= 1.2.2), magrittr
-        (>= 1.5), assertthat (>= 0.2.0), xgboost (>= 1.2.0.1), Metrics
-        (>= 0.1.4), plyr (>= 1.8.4), withr (>= 2.1.2), tibble (>=
-        2.1.3), scales (>= 1.0.0), doParallel (>= 1.0.15), dplyr (>=
-        0.8.3), RandomFields (>= 3.3.7), vegan (>= 2.5-6), RcppAlgos
-        (>= 2.3.6), groupdata2 (>= 1.3.0), Rcpp (>= 0.12.19), Rsymphony
-        (>= 0.1-31),
+Imports: utils, methods, stats, parallel, progress (>= 1.2.2),
+        assertthat (>= 0.2.0), xgboost (>= 1.2.0.1), plyr (>= 1.8.4),
+        withr (>= 2.1.2), tibble (>= 2.1.3), scales (>= 1.0.0),
+        doParallel (>= 1.0.15), dplyr (>= 0.8.3), RandomFields (>=
+        3.3.7), vegan (>= 2.5-6), RcppAlgos (>= 2.3.6), groupdata2 (>=
+        1.3.0), Rcpp (>= 0.12.19), Rsymphony (>= 0.1-31),
 Suggests: testthat (>= 2.0.0), knitr (>= 1.20), roxygen2 (>= 6.1.0),
         rmarkdown (>= 1.10), tidyr (>= 1.0.0), ggplot2 (>= 3.2.1),
         gridExtra (>= 2.3), viridis (>= 0.5.1), PoissonBinomial (>=
@@ -65,7 +65,7 @@ Collate: 'RcppExports.R' 'approx_evdsi.R' 'evdsi.R' 'internal.R'
         'relative_site_uncertainty_scores.R' 'simulate_feature_data.R'
         'simulate_site_data.R' 'validate.R' 'weighted_survey_scheme.R'
 NeedsCompilation: yes
-Packaged: 2021-05-25 23:50:25 UTC; jeff
+Packaged: 2021-05-28 22:58:30 UTC; jeff
 Author: Jeffrey O Hanson [aut, cre] (<https://orcid.org/0000-0002-4716-6134>),
   Iadine Chadès [aut] (<https://orcid.org/0000-0002-7442-2850>),
   Emma J Hudgins [aut] (<https://orcid.org/0000-0002-8402-5111>),
@@ -73,4 +73,4 @@ Author: Jeffrey O Hanson [aut, cre] (<https://orcid.org/0000-0002-4716-6134>),
   Free Software Foundation, Inc [ctb, cph] (gmp)
 Maintainer: Jeffrey O Hanson <jeffrey.hanson@uqconnect.edu.au>
 Repository: CRAN
-Date/Publication: 2021-05-27 06:40:02 UTC
+Date/Publication: 2021-05-31 07:10:32 UTC
