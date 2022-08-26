@@ -42,7 +42,7 @@ NULL
 #' @inheritSection feasible_survey_schemes Dependencies
 #'
 #' @return
-#' `matrix` of `logical` (`TRUE`/ `FALSE`)
+#' A `matrix` of `logical` (`TRUE`/ `FALSE`)
 #' values indicating if a site is selected in the scheme or not. Columns
 #' correspond to sites, and rows correspond to different schemes. If
 #' there is only one optimal survey scheme then the `matrix` will only
@@ -54,34 +54,31 @@ NULL
 #' and each column corresponds to a different replicate.
 #'
 #' @examples
-#' \dontrun{
 #' # set seeds for reproducibility
-#' library(RandomFields)
 #' set.seed(123)
-#' RFoptions(seed = 201)
 #'
-#' # simulate data
-#' site_data <- simulate_site_data(n_sites = 30, n_features = 2, prop = 0.1)
-#' feature_data <- simulate_feature_data(n_features = 2, prop = 1)
-#' feature_data$target <- c(10, 10)
+#' # load example site data
+#' data(sim_sites)
+#' print(sim_sites)
 #'
-#' # preview simulated data
-#' print(site_data)
-#' print(feature_data)
+#' # load example feature data
+#' data(sim_features)
+#' print(sim_features)
 #'
 #' # set total budget for managing sites for conservation
-#' # (i.e. 50% of the cost of managing all sites)
-#' total_budget <- sum(site_data$management_cost) * 0.5
+#'  # (i.e. 50% of the cost of managing all sites)
+#' total_budget <- sum(sim_sites$management_cost) * 0.5
 #'
 #' # set total budget for surveying sites for conservation
-#' # (i.e. 10% of the cost of surveying all sites)
-#' survey_budget <- sum(site_data$survey_cost) * 0.1
+#' # (i.e. 40% of the cost of surveying all sites)
+#' survey_budget <- sum(sim_sites$survey_cost) * 0.4
 #'
+#' \dontrun{
 #' # find optimal survey scheme using approximate method
 #' # (using 10 replicates so that this example completes relatively quickly)
 #' approx_opt_survey <- approx_optimal_survey_scheme(
-#'   site_data, feature_data,
-#'   c("f1", "f2"), c("n1", "n2"), c("p1", "p2"),
+#'   sim_sites, sim_features,
+#'   c("f1", "f2", "f3"), c("n1", "n2", "n3"), c("p1", "p2", "p3"),
 #'   "management_cost", "survey_cost",
 #'   "survey", "survey_sensitivity", "survey_specificity",
 #'   "model_sensitivity", "model_specificity",
@@ -339,22 +336,23 @@ approx_optimal_survey_scheme <- function(
   # calculate expected value of decision given schemes that survey sites
   ## initialize cluster
   if (n_threads > 1) {
-      cl <- start_cluster(n_threads,
-        c("pij", "all_feasible_schemes", "new_info_idx",
-          "site_data", "feature_data",
-          "feature_survey_column",
-          "feature_survey_sensitivity_column",
-          "feature_survey_specificity_column",
-          "site_survey_cost_column",
-          "site_management_cost_column",
-          "site_management_locked_in",
-          "site_management_locked_out",
-          "feature_target_column",
-          "n_approx_replicates",
-          "n_approx_outcomes_per_replicate",
-          "total_budget",
-          "seed",
-          "rcpp_approx_expected_value_of_decision_given_survey_scheme"))
+    cl <- start_cluster(n_threads,
+      c("pij", "all_feasible_schemes", "new_info_idx",
+        "site_data", "feature_data",
+        "feature_survey_column",
+        "feature_survey_sensitivity_column",
+        "feature_survey_specificity_column",
+        "site_survey_cost_column",
+        "site_management_cost_column",
+        "site_management_locked_in",
+        "site_management_locked_out",
+        "feature_target_column",
+        "n_approx_replicates",
+        "n_approx_outcomes_per_replicate",
+        "total_budget",
+        "seed",
+        "rcpp_approx_expected_value_of_decision_given_survey_scheme"))
+    on.exit(try(stop_cluster(cl), silent = TRUE), add = TRUE)
   }
   ## run calculations
   evd_new_info <- plyr::laply(

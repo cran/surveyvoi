@@ -84,7 +84,7 @@ NULL
 #' Royle JA & Link WA (2006) Generalized site occupancy models allowing for
 #' false positive and false negative errors. *Ecology*, 87: 835--841.
 #'
-#' @return `list` object containing:
+#' @return A `list` object containing:
 #' \describe{
 #'
 #' \item{models}{`list` of `list` objects containing the models.}
@@ -144,10 +144,9 @@ NULL
 #' }
 #'
 #' @examples
+#' \dontrun{
 #' # set seeds for reproducibility
-#' library(RandomFields)
 #' set.seed(123)
-#' RFoptions(seed = 123)
 #'
 #' # simulate data for 200 sites, 2 features, and 3 environmental variables
 #' site_data <- simulate_site_data(n_sites = 30, n_features = 2, prop = 0.1)
@@ -157,7 +156,6 @@ NULL
 #' cat(readLines(system.file("jags", "model.jags", package = "surveyvoi")),
 #'     sep = "\n")
 #'
-#' \dontrun{
 #' # fit models
 #' # note that we use a small number of MCMC iterations so that the example
 #' # finishes quickly, you probably want to use the defaults for real work
@@ -333,6 +331,7 @@ fit_hglm_occupancy_models <- function(
       c("model_cmbs", "d", "feature_data", "seed",
         "jags_n_samples", "jags_n_burnin", "jags_n_thin", "jags_n_adapt",
         "fit_hglm_model"))
+    on.exit(try(stop_cluster(cl), silent = TRUE), add = TRUE)
   }
   ## main processing
   m_raw <- plyr::llply(

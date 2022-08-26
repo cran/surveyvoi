@@ -1,10 +1,11 @@
 context("rcpp_approx_expected_value_of_decision_given_survey_scheme")
 
 test_that("single species", {
+  skip_on_cran()
+  skip_on_os("windows")
   # data
   ## set seeds
   set.seed(123)
-  RandomFields::RFoptions(seed = 123)
   ## set constants
   n_f <- 1
   n_sites <- 20
@@ -63,10 +64,11 @@ test_that("single species", {
 })
 
 test_that("multiple species", {
+  skip_on_cran()
+  skip_on_os("windows")
   # data
   ## set seeds
   set.seed(123)
-  RandomFields::RFoptions(seed = 123)
   ## set constants
   n_f <- 3
   n_sites <- 20

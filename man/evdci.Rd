@@ -42,7 +42,7 @@ a non-negative integer number (e.g. 0, 1, 2, 3). If a site has
 not previously been surveyed, a value of zero should be used.}
 
 \item{site_probability_columns}{\code{character} names of \code{numeric}
-columns in the argument to \code{site_data} that contain modelled
+columns in the argument to \code{site_data} that contain modeled
 probabilities of occupancy for each feature in each site.
 Each column should correspond to a different feature, and contain
 probability data (values between zero and one). No missing (\code{NA})
@@ -124,7 +124,7 @@ Defaults to \code{NULL} such that prior data is calculated automatically
 using \code{\link[=prior_probability_matrix]{prior_probability_matrix()}}.}
 }
 \value{
-\code{numeric} value.
+A \code{numeric} value.
 }
 \description{
 Calculate the \emph{expected value of the management decision
@@ -139,26 +139,25 @@ to very small problems.
 }
 \examples{
 # set seeds for reproducibility
-library(RandomFields)
 set.seed(123)
-RFoptions(seed = 123)
 
-# simulate data
-site_data <- simulate_site_data(n_sites = 5, n_features = 2, prop = 0.5)
-feature_data <- simulate_feature_data(n_features = 2, prop = 1)
-feature_data$target <- c(1, 1)
+# load example site data
+data(sim_sites)
+print(sim_sites)
 
-# preview simulated data
-print(site_data)
-print(feature_data)
+# load example feature data
+data(sim_features)
+print(sim_features)
 
 # set total budget for managing sites for conservation
-total_budget <- sum(site_data$management_cost) * 0.5
+ # (i.e. 50\% of the cost of managing all sites)
+total_budget <- sum(sim_sites$management_cost) * 0.5
 
 # calculate expected value of management decision given current information
 # using exact method
 ev_current <- evdci(
-  site_data, feature_data, c("f1", "f2"), c("n1", "n2"), c("p1", "p2"),
+  sim_sites, sim_features,
+  c("f1", "f2", "f3"), c("n1", "n2", "n3"), c("p1", "p2", "p3"),
   "management_cost", "survey_sensitivity", "survey_specificity",
   "model_sensitivity", "model_specificity",
   "target", total_budget)

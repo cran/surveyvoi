@@ -106,7 +106,7 @@ fitting. Defaults to 500.}
 printed during computations. Defaults to \code{FALSE}.}
 }
 \value{
-\code{list} object containing:
+A \code{list} object containing:
 \describe{
 
 \item{models}{\code{list} of \code{list} objects containing the models.}
@@ -212,10 +212,9 @@ the documentation for the \pkg{rjags} package.
 }
 
 \examples{
+\dontrun{
 # set seeds for reproducibility
-library(RandomFields)
 set.seed(123)
-RFoptions(seed = 123)
 
 # simulate data for 200 sites, 2 features, and 3 environmental variables
 site_data <- simulate_site_data(n_sites = 30, n_features = 2, prop = 0.1)
@@ -225,7 +224,6 @@ feature_data <- simulate_feature_data(n_features = 2, prop = 1)
 cat(readLines(system.file("jags", "model.jags", package = "surveyvoi")),
     sep = "\n")
 
-\dontrun{
 # fit models
 # note that we use a small number of MCMC iterations so that the example
 # finishes quickly, you probably want to use the defaults for real work

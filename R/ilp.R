@@ -31,7 +31,7 @@ NULL
 #' @param verbose `logical` indicating if information should be
 #'   printed while generating prioritization.
 #'
-#' @return `matrix` containing the solution. Each column corresponds
+#' @return A `matrix` containing the solution. Each column corresponds
 #'   to a different planning unit and each row corresponds to a different
 #'   solution. Cell values indicate if a given planning unit was selected in a
 #'   given solution.
@@ -64,11 +64,13 @@ distance_based_prioritizations <- function(
     assertthat::noNA(solver))
   assertthat::assert_that(
     solver %in% c("auto", "Rsymphony", "gurobi"))
+
   # identify solver
   if (identical(solver, "auto")) {
     solver <- ifelse(
       requireNamespace("gurobi", quietly = TRUE), "gurobi", "Rsymphony")
   }
+
   # prepare data for optimization
   ## initialization
   n <- nrow(x)
@@ -101,6 +103,7 @@ distance_based_prioritizations <- function(
   } else {
     p <- list(gap_limit = -1, verbosity = ifelse(verbose, 1, -2))
   }
+
   # prepare output matrix
   out <- matrix(NA, ncol = nrow(x), nrow = length(budget))
   # iterate over each budget and obtain the solution
@@ -126,6 +129,7 @@ distance_based_prioritizations <- function(
     ## store solution
     out[b, ] <- as.logical(s)
   }
+
   # return matrix
   out
 }
@@ -158,7 +162,7 @@ distance_based_prioritizations <- function(
 #'   it is available; otherwise, it will use the SYMPHONY software
 #'   via the \pkg{Rsymphony} package.
 #'
-#' @return `matrix` containing the solution. Each column corresponds
+#' @return A `matrix` containing the solution. Each column corresponds
 #'   to a different planning unit and each row corresponds to a different
 #'   row. Cell values indicate if a given planning unit was selected in a
 #'   given solution.
@@ -263,7 +267,7 @@ weight_based_prioritizations <- function(
 #' Note that only a small set of parameters and model specification
 #' methods are supported.
 #'
-#' @return `list` object.
+#' @return A `list` object.
 #'
 #' @noRd
 rsymphony_model <- function(model) {
@@ -307,16 +311,13 @@ rsymphony_model <- function(model) {
 #'
 #' @param parameters `list` object.
 #'
-#' @return `list` object.
+#' @return A `list` object.
 #'
 #' @noRd
 rsymphony_solve <- function(model, parameters) {
   # assert arguments are valid
   assertthat::assert_that(is.list(model), is.list(parameters))
   # return solution
-  list(
-    x = do.call(
-      Rsymphony::Rsymphony_solve_LP,
-      append(model, parameters))$solution
-  )
+  s <- do.call(Rsymphony::Rsymphony_solve_LP, append(model, parameters))
+  list(x = s$solution, objval = s$objval)
 }

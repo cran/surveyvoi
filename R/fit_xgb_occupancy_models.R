@@ -124,7 +124,7 @@ NULL
 #'
 #' }
 #'
-#' @return `list` object containing:
+#' @return A `list` object containing:
 #' \describe{
 #'
 #' \item{parameters}{`list` of `list` objects containing the best
@@ -180,21 +180,20 @@ NULL
 #' }
 #'
 #' @examples
+#' \dontrun{
 #' # set seeds for reproducibility
-#' library(RandomFields)
 #' set.seed(123)
-#' RFoptions(seed = 123)
 #'
-#' # simulate data for 200 sites, 2 features, and 3 environmental variables
-#' site_data <- simulate_site_data(n_sites = 30, n_features = 2, prop = 0.1)
+#' # simulate data for 30 sites, 2 features, and 3 environmental variables
+#' site_data <- simulate_site_data(
+#'   n_sites = 30, n_features = 2, n_env_vars = 3, prop = 0.1)
 #' feature_data <- simulate_feature_data(n_features = 2, prop = 1)
 #'
-#' # create list of possible tuning parameters for modelling
+#' # create list of possible tuning parameters for modeling
 #' parameters <- list(eta = seq(0.1, 0.5, length.out = 3),
 #'                    lambda = 10 ^ seq(-1.0, 0.0, length.out = 3),
 #'                    objective = "binary:logistic")
 #'
-#' \donttest{
 #' # fit models
 #' # note that we use 10 random search iterations here so that the example
 #' # finishes quickly, you would probably want something like 1000+
@@ -217,9 +216,11 @@ NULL
 #' @export
 fit_xgb_occupancy_models <- function(
   site_data, feature_data,
-  site_detection_columns, site_n_surveys_columns,
+  site_detection_columns,
+  site_n_surveys_columns,
   site_env_vars_columns,
-  feature_survey_sensitivity_column, feature_survey_specificity_column,
+  feature_survey_sensitivity_column,
+  feature_survey_specificity_column,
   xgb_tuning_parameters,
   xgb_early_stopping_rounds = rep(20, length(site_detection_columns)),
   xgb_n_rounds = rep(100, length(site_detection_columns)),
@@ -301,7 +302,8 @@ fit_xgb_occupancy_models <- function(
     create_site_folds(
       prop_detected = site_data[[site_detection_columns[i]]][n_surveys > 0],
       n_total = n_surveys[n_surveys > 0],
-      n = n_folds[i], idx[n_surveys > 0], seed = seed)
+      n = n_folds[i], idx[n_surveys > 0],
+      seed = seed)
   })
 
   # prepare data
@@ -346,7 +348,7 @@ fit_xgb_occupancy_models <- function(
       x_train <- site_env_data[c(train_data$idx, train_data$idx), ,
                                drop = FALSE]
       w_train <- c(train_data$n_det / train_data$n_surveys,
-                  train_data$n_nondet / train_data$n_surveys)
+                   train_data$n_nondet / train_data$n_surveys)
       # prepare test fold data (for model evaluation + performance stats)
       test_data <- site_data[f[[i]]$test[[k]], , drop = FALSE]
       y_test <- c(rep(1, nrow(test_data)), rep(0, nrow(test_data)))
@@ -371,13 +373,18 @@ fit_xgb_occupancy_models <- function(
         feature_data[[feature_survey_specificity_column]][i],
       parameters = xgb_tuning_parameters,
       early_stopping_rounds = xgb_early_stopping_rounds[i],
-      n_rounds = xgb_n_rounds[i], n_folds = n_folds[i],
-      n_threads = n_threads, verbose = verbose, seed = seed)
+      n_rounds = xgb_n_rounds[i],
+      n_folds = n_folds[i],
+      n_threads = n_threads,
+      verbose = verbose,
+      seed = seed)
   })
 
   # assess models
-  perf <- plyr::ldply(seq_len(nrow(feature_data)), function(i) {
-    out <- plyr::ldply(seq_len(n_folds[i]), function(k) {
+  perf <- plyr::ldply(
+    seq_len(nrow(feature_data)), .parallel = FALSE, function(i) {
+    out <- plyr::ldply(
+      seq_len(n_folds[i]), .parallel = FALSE, function(k) {
       ## extract fold training and test data
       m_k <- m[[i]]$models[[k]]
       nround_k <- m[[i]]$models[[k]]$best_iteration
@@ -391,9 +398,13 @@ fit_xgb_occupancy_models <- function(
       survey_spec <- feature_data[[feature_survey_specificity_column]][[i]]
       ## make predictions
       p_train_k <- c(withr::with_package("xgboost",
-        stats::predict(m_k, x_train_k, ntreelimit = nround_k)))
+        stats::predict(
+          m_k, xgboost::xgb.DMatrix(x_train_k, nthread = n_threads),
+          iterationrange = c(1, nround_k + 1))))
       p_test_k <- c(withr::with_package("xgboost",
-        stats::predict(m_k, x_test_k, ntreelimit = nround_k)))
+        stats::predict(
+          m_k, xgboost::xgb.DMatrix(x_test_k, nthread = n_threads),
+          iterationrange = c(1, nround_k + 1))))
       ## validate predictions
       assertthat::assert_that(all(p_train_k >= 0), all(p_train_k <= 1),
         msg = "xgboost predictions are not between zero and one")
@@ -433,15 +444,17 @@ fit_xgb_occupancy_models <- function(
   # make model predictions
   pred <- vapply(seq_len(nrow(feature_data)),
                  FUN.VALUE = numeric(nrow(site_env_data)), function(i) {
-    nr <- m[[i]]$parameters$nround
     rowMeans(
       vapply(m[[i]]$models, FUN.VALUE = numeric(nrow(site_env_data)),
              function(x) {
       ## generate predictions
       out <- c(withr::with_package("xgboost", stats::predict(
-        x, site_env_data, ntreelimit = x$best_iteration)))
+        x, xgboost::xgb.DMatrix(site_env_data, nthread = n_threads),
+        iterationrange = c(1, x$best_iteration + 1)
+      )))
       ## validate predictions
-      assertthat::assert_that(all(out >= 0), all(out <= 1),
+      assertthat::assert_that(
+        all(out >= 0), all(out <= 1),
         msg = "xgboost predictions are not between zero and one")
       ## return result
       out
@@ -485,7 +498,6 @@ tune_model <- function(data, folds, survey_sensitivity, survey_specificity,
     x
   })
   full_parameters <- data.frame(full_parameters, stringsAsFactors = FALSE)
-
   ## add objective if missing
   if (is.null(full_parameters$objective)) {
     full_parameters$objective <- "binary:logistic"
@@ -502,35 +514,40 @@ tune_model <- function(data, folds, survey_sensitivity, survey_specificity,
   })
   assertthat::assert_that(all(is.finite(spw)))
 
+  # precompute xgboost matrices
+  dtrain <- lapply(seq_len(n_folds), function(k) {
+    xgboost::xgb.DMatrix(
+      data[[k]]$fit$x,
+      label = data[[k]]$fit$y,
+      weight = data[[k]]$fit$w,
+      nthread = n_threads)
+  })
+  dtest <- lapply(seq_len(n_folds), function(k) {
+    xgboost::xgb.DMatrix(
+      data[[k]]$test$x,
+      label = data[[k]]$test$y,
+      weight = data[[k]]$test$w,
+      nthread = n_threads)
+  })
+
   # find best tuning parameters using k-fold cross validation
   ## fit models using all parameters combinations
-  is_parallel <- (n_threads > 1) && (nrow(full_parameters) > 1)
-  if (is_parallel) {
-    cl <- start_cluster(n_threads,
-      c("full_parameters", "data", "survey_sensitivity", "survey_specificity",
-        "spw", "n_rounds", "early_stopping_rounds", "seed",
-        "rcpp_model_performance", "make_feval_tss"))
-  }
-  cv <- plyr::ldply(
-    seq_len(nrow(full_parameters)), .parallel = is_parallel,
-   .paropts = list(.packages = "surveyvoi"), function(i)  {
+  cv <- plyr::ldply(seq_len(nrow(full_parameters)), function(i)  {
     ## extract tuning parameters
     p <- as.list(full_parameters[i, , drop = FALSE])
     ## run cross-validation
     cv <- lapply(seq_len(n_folds), function(k) {
-      ### prepare data for xgboost (note we use the fit data not the train data)
-      dtrain <- xgboost::xgb.DMatrix(
-        data[[k]]$fit$x, label = data[[k]]$fit$y,
-        weight = data[[k]]$fit$w)
-      dtest <- xgboost::xgb.DMatrix(
-        data[[k]]$test$x, label = data[[k]]$test$y,
-        weight = data[[k]]$test$w)
       ### prepare evaluation function
       curr_feval_tss <- make_feval_tss(survey_sensitivity, survey_specificity)
       ### prepare arguments for xgboost call
-      args <- list(data = dtrain, verbose = FALSE, scale_pos_weight = spw[k],
-                   watchlist = list(test = dtest), eval_metric = curr_feval_tss,
-                   maximize = TRUE, nrounds = n_rounds, nthread = 1,
+      args <- list(data = dtrain[[k]],
+                   verbose = FALSE,
+                   scale_pos_weight = spw[k],
+                   watchlist = list(test = dtest[[k]]),
+                   eval_metric = curr_feval_tss,
+                   maximize = TRUE,
+                   nrounds = n_rounds,
+                   nthread = n_threads,
                    early_stopping_rounds = early_stopping_rounds)
       args <- append(args, p)
       ### fit model
@@ -539,8 +556,10 @@ tune_model <- function(data, folds, survey_sensitivity, survey_specificity,
       })
       ### generate predictions
       yhat_test <- c(withr::with_package("xgboost",
-          stats::predict(
-            model, data[[k]]$test$x, ntreelimit = model$best_iteration)))
+        stats::predict(
+          model, dtest[[k]],
+          iterationrange = c(1, model$best_iteration + 1)
+        )))
       ### validate predictions
       assertthat::assert_that(all(yhat_test >= 0), all(yhat_test <= 1),
         msg = "xgboost predictions are not between zero and one")
@@ -558,12 +577,11 @@ tune_model <- function(data, folds, survey_sensitivity, survey_specificity,
       eval = mean(vapply(cv, `[[`, numeric(1), "eval")),
       models = list(lapply(cv, `[[`, "model")))
   })
-  if (is_parallel) {
-    cl <- stop_cluster(cl)
-  }
-  ## determine best parameters for i'th species
+
+  # determine best parameters for i'th species
   cv <- tibble::as_tibble(cv)
   j <- which.max(cv$eval)
+
   # return best parameters and models
   best_params <- as.list(full_parameters[j, , drop = FALSE])
   best_params$scale_pos_weight <- list(spw)
@@ -581,7 +599,7 @@ make_feval_tss <- function(sens, spec) {
       any(labels >= 0.5), any(labels < 0.5),
       msg = "test labels need at least one presence and one absence")
     assertthat::assert_that(all(preds >= 0), all(preds <= 1),
-      msg = "xgboost predictions are not between zero and one (eval_matric)")
+      msg = "xgboost predictions are not between zero and one (eval_metric)")
     value <- rcpp_model_performance(labels, preds, wts, sens, spec)
     list(metric = "tss", value = value[[1]])
   }

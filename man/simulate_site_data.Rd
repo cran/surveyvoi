@@ -9,10 +9,10 @@ simulate_site_data(
   n_features,
   proportion_of_sites_missing_data,
   n_env_vars = 3,
-  survey_cost_intensity = 10,
-  survey_cost_radius = 0.5,
+  survey_cost_intensity = 20,
+  survey_cost_scale = 5,
   management_cost_intensity = 100,
-  management_cost_radius = 0.5,
+  management_cost_scale = 30,
   max_number_surveys_per_site = 5,
   output_probabilities = TRUE
 )
@@ -31,16 +31,16 @@ simulating feature distributions. Defaults to 3.}
 
 \item{survey_cost_intensity}{\code{numeric} intensity of the costs of
 surveying sites. Larger values correspond to larger costs on average.
-Defaults to 2.}
+Defaults to 20.}
 
-\item{survey_cost_radius}{\code{numeric} value corresponding to
-the spatial homogeneity of the survey costs. Defaults to 0.1.}
+\item{survey_cost_scale}{\code{numeric} value corresponding to
+the spatial homogeneity of the survey costs. Defaults to 5.}
 
 \item{management_cost_intensity}{\code{numeric} intensity of the costs of
 average cost of managing sites for conservation. Defaults to 100.}
 
-\item{management_cost_radius}{\code{numeric} value corresponding to
-the spatial homogeneity of the survey costs. Defaults to 0.1.}
+\item{management_cost_scale}{\code{numeric} value corresponding to
+the spatial homogeneity of the survey costs. Defaults to 30.}
 
 \item{max_number_surveys_per_site}{\code{integer} maximum number of
 surveys per site in the simulated data. Defaults to 5.}
@@ -50,7 +50,7 @@ probability values of occupancy should be output or not. Defaults
 to \code{TRUE}.}
 }
 \value{
-\code{\link[sf:sf]{sf::sf()}} object with site data.
+A \code{\link[sf:sf]{sf::sf()}} object with site data.
 The \code{"management_cost"} column contains the site protection costs,
 and the \code{"survey_cost"} column contains the costs for surveying
 each site.
@@ -70,15 +70,9 @@ to the same feature).
 \description{
 Simulate site data for developing simulated survey schemes.
 }
-\details{
-The data are simulated using random fields
-(\code{\link[RandomFields:RFsimulate]{RandomFields::RFsimulate()}}) to provide spatially auto-correlated
-simulations.
-}
 \examples{
 # set seed for reproducibility
 set.seed(123)
-RandomFields::RFoptions(seed = 123)
 
 # simulate data
 d <- simulate_site_data(n_sites = 10, n_features = 4, prop = 0.5)

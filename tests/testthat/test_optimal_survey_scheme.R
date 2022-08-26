@@ -1,7 +1,9 @@
 context("optimal_survey_scheme")
 
 test_that("single species", {
+  skip_on_cran()
   skip_if_not_installed("gurobi")
+  skip_on_os("windows")
   # data
   set.seed(500)
   site_data <- sf::st_as_sf(
@@ -53,6 +55,7 @@ test_that("single species", {
 })
 
 test_that("multiple species", {
+  skip_on_cran()
   skip_if_not_installed("gurobi")
   # data
   set.seed(500)
@@ -112,6 +115,7 @@ test_that("multiple species", {
 })
 
 test_that("multiple species (sparse)", {
+  skip_on_cran()
   skip_if_not_installed("gurobi")
   # data
   set.seed(500)
@@ -171,10 +175,11 @@ test_that("multiple species (sparse)", {
 })
 
 test_that("consistent results", {
+  skip_on_cran()
   skip_if_not_installed("gurobi")
+  skip_on_os("windows")
   # seeds
   set.seed(505)
-  RandomFields::RFoptions(seed = 505)
   # data
   site_data <- simulate_site_data(
     n_sites = 30, n_features = 1, proportion_of_sites_missing_data = 0.1,
@@ -219,12 +224,12 @@ test_that("consistent results", {
 
 test_that("consistent results (multiple threads)", {
   skip_if_not_installed("gurobi")
+  skip_on_os("windows")
   # skip if using PSOCK cluster and package not installed
   skip_if(!requireNamespace("surveyvoi") &&
           !identical(.Platform$OS.type, "unix"))
   # seeds
   set.seed(505)
-  RandomFields::RFoptions(seed = 505)
   # data
   site_data <- simulate_site_data(
     n_sites = 30, n_features = 1, proportion_of_sites_missing_data = 0.1,

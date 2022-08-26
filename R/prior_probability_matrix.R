@@ -4,28 +4,26 @@
 #'
 #' @inheritParams evdci
 #'
-#' @return `matrix` object containing the prior probabilities of each
+#' @return A `matrix` object containing the prior probabilities of each
 #'   feature occupying each site. Each row corresponds to a different
 #'   feature and each column corresponds to a different site.
 #'
 #' @examples
 #' # set seeds for reproducibility
-#' library(RandomFields)
 #' set.seed(123)
-#' RFoptions(seed = 123)
 #'
-#' # simulate data
-#' site_data <- simulate_site_data(n_sites = 5, n_features = 2, prop = 0.5)
-#' feature_data <- simulate_feature_data(n_features = 2, prop = 1)
+#' # load example site data
+#' data(sim_sites)
+#' print(sim_sites)
 #'
-#' # preview simulated data
-#' print(site_data)
-#' print(feature_data)
+#' # load example feature data
+#' data(sim_features)
+#' print(sim_features)
 #'
 #' # calculate prior probability matrix
 #' prior_matrix <- prior_probability_matrix(
-#'   site_data, feature_data,
-#'   c("f1", "f2"), c("n1", "n2"), c("p1", "p2"),
+#'   sim_sites, sim_features,
+#'   c("f1", "f2", "f3"), c("n1", "n2", "n3"), c("p1", "p2", "p3"),
 #'   "survey_sensitivity", "survey_specificity",
 #'   "model_sensitivity", "model_specificity")
 #'
@@ -91,8 +89,10 @@ prior_probability_matrix <- function(
     all(feature_data[[feature_model_specificity_column]] >= 0),
     all(feature_data[[feature_model_specificity_column]] <= 1))
   ## validate survey data
-  validate_site_detection_data(site_data, site_detection_columns)
-  validate_site_n_surveys_data(site_data, site_n_surveys_columns)
+  validate_site_detection_data(
+    site_data, site_detection_columns, check_zeros = FALSE)
+  validate_site_n_surveys_data(
+    site_data, site_n_surveys_columns, check_zeros = FALSE)
 
   # calculate prior matrix
   prior <- internal_prior_probability_matrix(
@@ -223,7 +223,7 @@ internal_prior_probability_matrix <- function(
 #'   and 1-1e10 to avoid issues with probabilities that are exactly equal to
 #'   zero and one.
 #'
-#' @return `numeric` probability value.
+#' @return A `numeric` probability value.
 #'
 #' @noRd
 prior_probability_of_occupancy <- function(

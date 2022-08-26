@@ -4,11 +4,12 @@
 # surveyvoi: Survey Value of Information
 
 [![lifecycle](https://img.shields.io/badge/Lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html)
-[![R-CMD-check-Ubuntu](https://img.shields.io/github/workflow/status/jeffreyhanson/surveyvoi/Ubuntu/master.svg?label=Ubuntu)](https://github.com/jeffreyhanson/surveyvoi/actions)
-[![R-CMD-check-Windows](https://img.shields.io/github/workflow/status/jeffreyhanson/surveyvoi/Windows/master.svg?label=Windows)](https://github.com/jeffreyhanson/surveyvoi/actions)
-[![R-CMD-check-Mac-OSX](https://img.shields.io/github/workflow/status/jeffreyhanson/surveyvoi/Mac%20OSX/master.svg?label=Mac%20OSX)](https://github.com/jeffreyhanson/surveyvoi/actions)
+[![R-CMD-check-Ubuntu](https://img.shields.io/github/workflow/status/prioritizr/surveyvoi/Ubuntu/master.svg?label=Ubuntu)](https://github.com/prioritizr/surveyvoi/actions)
+[![R-CMD-check-Windows](https://img.shields.io/github/workflow/status/prioritizr/surveyvoi/Windows/master.svg?label=Windows)](https://github.com/prioritizr/surveyvoi/actions)
+[![R-CMD-check-macOS](https://img.shields.io/github/workflow/status/prioritizr/surveyvoi/macOS/master.svg?label=macOS)](https://github.com/prioritizr/surveyvoi/actions)
+[![Documentation](https://img.shields.io/github/workflow/status/prioritizr/surveyvoi/Documentation/master.svg?label=Documentation)](https://github.com/prioritizr/surveyvoi/actions)
 [![Coverage
-Status](https://codecov.io/github/jeffreyhanson/surveyvoi/coverage.svg?branch=master)](https://codecov.io/github/jeffreyhanson/surveyvoi?branch=master)
+Status](https://codecov.io/github/prioritizr/surveyvoi/coverage.svg?branch=master)](https://codecov.io/github/prioritizr/surveyvoi?branch=master)
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/surveyvoi)](https://CRAN.R-project.org/package=surveyvoi)
 
 The *surveyvoi* package is a decision support tool for prioritizing
@@ -30,23 +31,13 @@ required to fit hierarchical generalized linear models.
 
 ## Installation
 
-The latest official version of the *surveyvoi R* package can be
-installed from the [Comprehensive R Archive Network
-(CRAN)](https://cran.r-project.org/) using the following *R* code.
-
-``` r
-install.packages("surveyvoi", repos = "https://cran.rstudio.com/")
-```
-
-Alternatively, the latest development version can be installed from
-[GitHub](https://github.com/jeffreyhanson/surveyvoi) using the following
-code. Please note that while developmental versions may contain
-additional features not present in the official version, they may also
-contain coding errors.
+The development version can be installed from
+[GitHub](https://github.com/prioritizr/surveyvoi) using the following
+code.
 
 ``` r
 if (!require(remotes)) install.packages("remotes")
-remotes::install_github("jeffreyhanson/surveyvoi")
+remotes::install_github("prioritizr/surveyvoi")
 ```
 
 #### Windows
@@ -58,41 +49,45 @@ This software provides system requirements from
 
 #### Ubuntu
 
-The `gmp`, `mpfr`, and `symphony` libraries need to be installed to
-install the *surveyvoi R* package. For recent versions of Ubuntu (18.04
+The `gmp`, `fftw3`, `mpfr`, and `symphony` libraries need to be
+installed to install the *surveyvoi R* package. Although the `fftw3` and
+`symphony` libraries are not used directly, they are needed to
+successfully install dependencies. For recent versions of Ubuntu (18.04
 and later), these libraries are available through official repositories.
 They can be installed using the following system commands:
 
     apt-get -y update
-    apt-get install -y libgmp3-dev libmpfr-dev coinor-libsymphony-dev
+    apt-get install -y libgmp3-dev libfftw3-dev libmpfr-dev coinor-libsymphony-dev
 
 #### Linux
 
-For Unix-alikes, `gmp` (&gt;= 4.2.3), `mpfr` (&gt;= 3.0.0), and
-`symphony` (&gt;= 5.6.16) are required.
+For Unix-alikes, `gmp` (&gt;= 4.2.3), `mpfr` (&gt;= 3.0.0), `fftw3`
+(&gt;= 3.3), and `symphony` (&gt;= 5.6.16) are required.
 
-#### MacOS
+#### macOS
 
-The `gmp`, `mpfr`, and `symphony` libraries need to be installed to
-install the *surveyvoi R* package. The easiest way to install these
-libraries is using [HomeBrew](https://brew.sh/). After installing
-HomeBrew, these libraries can be installed using the following commands
-in the system terminal:
+The `gmp`, `fftw`, `mpfr`, and `symphony` libraries are required.
+Although the `fftw3` and `symphony` libraries are not used directly,
+they are needed to successfully install dependencies. The easiest way to
+install these libraries is using [HomeBrew](https://brew.sh/). After
+installing HomeBrew, these libraries can be installed using the
+following commands in the system terminal:
 
     brew tap coin-or-tools/coinor
     brew install symphony
     brew install pkg-config
     brew install gmp
+    brew install fftw
     brew install mpfr
 
 ## Citation
 
 Please cite the *surveyvoi R* package when using it in publications. To
-cite the latest official version, please use:
+cite the developmental version, please use:
 
-> Hanson JO, Chadès I, Hudgins EJ, Bennett J (2021). surveyvoi: Survey
-> Value of Information. R package version 1.0.1. Available at
-> <https://CRAN.R-project.org/package=surveyvoi>.
+> Hanson JO, Chadès I, Hudgins EJ, Bennett J (2022). surveyvoi: Survey
+> Value of Information. R package version 1.0.4. Available at
+> <https://github.com/prioritizr/surveyvoi>.
 
 ## Usage
 
@@ -133,9 +128,9 @@ where the feature was detected (respectively). For example, if `"n1"`
 has a value of 2 and `"f1"` has a value of 0.5 for a given site, then
 the feature `"f1"` was detected in only one of the two surveys conducted
 in this site that looked for the feature. Finally, the `"p1"`, `"p2"`,
-and `"p3"` columns contain modelled probability estimates of each
-species being present in each site (see `fit_hglm_occupancy_models()`
-and `fit_xgb_occupancy_models()` to generate such estimates for your own
+and `"p3"` columns contain modeled probability estimates of each species
+being present in each site (see `fit_hglm_occupancy_models()` and
+`fit_xgb_occupancy_models()` to generate such estimates for your own
 data).
 
 ``` r
@@ -151,23 +146,23 @@ print(sim_sites, width = Inf)
     ## Dimension:     XY
     ## Bounding box:  xmin: 0.10513 ymin: 0.04556193 xmax: 0.9764926 ymax: 0.8637977
     ## CRS:           NA
-    ## # A tibble: 6 x 14
-    ##   survey_cost management_cost    f1    f2    f3    n1    n2    n3     e1     e2
-    ##         <dbl>           <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>  <dbl>  <dbl>
-    ## 1        3.43            43.8     1 1     0         5     5     5 -1.38   0.425
-    ## 2        6.07            59.0     0 0     0         0     0     0  0.736 -1.01 
-    ## 3        7.09            46.7     0 0     0         0     0     0  0.754 -0.959
-    ## 4        6.50            49.6     0 0     0         0     0     0  0.530  1.51 
-    ## 5        5.37            48.1     0 0     0         0     0     0  0.546 -0.525
-    ## 6        3.35            48.9     1 0.667 0.333     3     3     3 -1.18   0.557
+    ## # A tibble: 6 × 14
+    ##   survey_cost management_cost    f1    f2    f3    n1    n2    n3      e1     e2
+    ##         <dbl>           <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>   <dbl>  <dbl>
+    ## 1          14             102     1   1       1     3     3     3  1.00   -0.848
+    ## 2          25              90     0   0       0     0     0     0 -1.44    1.27 
+    ## 3          25             165     1   0.6     0     5     5     5  1.25    0.817
+    ## 4          17             104     0   0       0     0     0     0 -0.484  -0.292
+    ## 5          18             100     0   0       0     0     0     0  0.0135  0.380
+    ## 6          15              94     0   0       0     0     0     0 -0.347  -1.33 
     ##      p1    p2    p3               geometry
     ##   <dbl> <dbl> <dbl>                <POINT>
-    ## 1 0.941 0.999 0.057  (0.1589075 0.8637977)
-    ## 2 0.36  0.006 0.259  (0.9764926 0.7485368)
-    ## 3 0.337 0.006 0.305  (0.8362375 0.2282762)
-    ## 4 0.048 0.579 0.998     (0.10513 0.179855)
-    ## 5 0.335 0.032 0.488 (0.5985786 0.04556193)
-    ## 6 0.896 0.998 0.145  (0.1504241 0.6821156)
+    ## 1 1     0.999 0.789  (0.1589075 0.8637977)
+    ## 2 0     0     0.112  (0.9764926 0.7485368)
+    ## 3 1     0.419 0.012  (0.8362375 0.2282762)
+    ## 4 0.022 0.502 0.834     (0.10513 0.179855)
+    ## 5 0.318 0.13  0.225 (0.5985786 0.04556193)
+    ## 6 0.474 0.997 0.991  (0.1504241 0.6821156)
 
 ``` r
 # plot cost of protecting each site
@@ -177,7 +172,7 @@ ggtitle("management_cost") +
 theme(legend.title = element_blank())
 ```
 
-<img src="man/figures/README-unnamed-chunk-7-1.png" style="display: block; margin: auto;" />
+<img src="man/figures/README-unnamed-chunk-6-1.png" style="display: block; margin: auto;" />
 
 ``` r
 # plot cost of conducting an additional survey in each site
@@ -188,7 +183,7 @@ ggtitle("survey_cost") +
 theme(legend.title = element_blank())
 ```
 
-<img src="man/figures/README-unnamed-chunk-7-2.png" style="display: block; margin: auto;" />
+<img src="man/figures/README-unnamed-chunk-6-2.png" style="display: block; margin: auto;" />
 
 ``` r
 # plot survey data
@@ -219,7 +214,7 @@ scale_color_continuous(limits = c(0, 1))
 <img src="man/figures/README-f_plot-1.png" style="display: block; margin: auto;" />
 
 ``` r
-# plot modelled probability of occupancy data
+# plot modeled probability of occupancy data
 sim_sites %>%
 select(p1, p2, p3) %>%
 gather(name, value, -geometry) %>%
@@ -255,7 +250,7 @@ data(sim_features)
 print(sim_features, width = Inf)
 ```
 
-    ## # A tibble: 3 x 7
+    ## # A tibble: 3 × 7
     ##   name  survey survey_sensitivity survey_specificity model_sensitivity
     ##   <chr> <lgl>               <dbl>              <dbl>             <dbl>
     ## 1 f1    TRUE                0.954              0.886             0.718
@@ -323,8 +318,8 @@ opt_scheme <-
 print(str(opt_scheme))
 ```
 
-    ##  logi [1, 1:6] FALSE FALSE TRUE TRUE FALSE FALSE
-    ##  - attr(*, "ev")= num [1, 1:100] 2.92 2.92 2.92 2.92 2.92 ...
+    ##  logi [1, 1:6] FALSE FALSE FALSE FALSE FALSE FALSE
+    ##  - attr(*, "ev")= num [1, 1:100] 3 3 3 3 3 ...
     ## NULL
 
 ``` r
@@ -340,7 +335,7 @@ ggtitle("scheme") +
 theme(legend.title = element_blank())
 ```
 
-<img src="man/figures/README-unnamed-chunk-10-1.png" style="display: block; margin: auto;" />
+<img src="man/figures/README-unnamed-chunk-9-1.png" style="display: block; margin: auto;" />
 
 This has just been a taster of the *surveyvoi R* package. In addition to
 this functionality, it can be used to evaluate survey schemes using
@@ -348,11 +343,11 @@ value of information analysis. Furthermore, it can be used to generate
 survey schemes using conventional approaches (e.g. sampling
 environmental gradients, and selecting places with highly uncertain
 information). For more information, see the [package
-vignette](http://jeffrey-hanson.com/surveyvoi/articles/surveyvoi.html).
+vignette](https://prioritizr.github.io/surveyvoi/articles/surveyvoi.html).
 
 ## Getting help
 
 If you have any questions about using the *surveyvoi R* package or
 suggestions for improving it, please [file an issue at the package’s
 online code
-repository](https://github.com/jeffreyhanson/surveyvoi/issues/new).
+repository](https://github.com/prioritizr/surveyvoi/issues/new).
