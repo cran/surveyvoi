@@ -1,6 +1,6 @@
 Package: surveyvoi
 Type: Package
-Version: 1.0.5
+Version: 1.0.6
 Title: Survey Value of Information
 Description: Decision support tool for prioritizing sites for ecological
     surveys based on their potential to improve plans for conserving
@@ -15,7 +15,7 @@ Description: Decision support tool for prioritizing sites for ecological
     functions depend on the 'Gurobi' optimization software (available from
     <https://www.gurobi.com>). Additionally, the 'JAGS' software (available from
     <https://mcmc-jags.sourceforge.io/>) is required to fit hierarchical
-    generalized linear models.
+    generalized linear models. For further details, see Hanson et al. (2022) <doi:10.1111/1365-2664.14309>.
 Authors@R: c(person(c('Jeffrey', 'O'), 'Hanson',
                email='jeffrey.hanson@uqconnect.edu.au', role = c('aut', 'cre'),
                comment = c(ORCID = '0000-0002-4716-6134')),
@@ -45,13 +45,13 @@ LinkingTo: Rcpp (>= 0.12.19), RcppEigen (>= 0.3.3.7.0), PoissonBinomial
 License: GPL-3
 LazyData: true
 Language: en-US
-SystemRequirements: C++11, JAGS (>= 4.3.0) (optional), fftw3 (>= 3.3),
-        gmp (>= 6.2.1), gmpxx (>= 6.2.1), mpfr (>= 3.0.0), autoconf (>=
-        2.69), automake (>= 1.16.5)
+SystemRequirements: JAGS (>= 4.3.0) (optional), fftw3 (>= 3.3), gmp (>=
+        6.2.1), gmpxx (>= 6.2.1), mpfr (>= 3.0.0), autoconf (>= 2.69),
+        automake (>= 1.16.5)
 URL: https://prioritizr.github.io/surveyvoi/
 BugReports: https://github.com/prioritizr/surveyvoi/issues
 VignetteBuilder: knitr
-RoxygenNote: 7.2.1
+RoxygenNote: 7.3.1
 Encoding: UTF-8
 Biarch: true
 Collate: 'RcppExports.R' 'approx_evdsi.R' 'evdsi.R' 'internal.R'
@@ -66,11 +66,11 @@ Collate: 'RcppExports.R' 'approx_evdsi.R' 'evdsi.R' 'internal.R'
         'simulate_site_data.R' 'validate.R' 'weighted_survey_scheme.R'
         'zzz.R'
 NeedsCompilation: yes
-Packaged: 2022-09-14 14:36:55 UTC; jeff
+Packaged: 2024-02-16 20:18:40 UTC; jeff
 Author: Jeffrey O Hanson [aut, cre] (<https://orcid.org/0000-0002-4716-6134>),
   Iadine Chadès [aut] (<https://orcid.org/0000-0002-7442-2850>),
   Emma J Hudgins [aut] (<https://orcid.org/0000-0002-8402-5111>),
   Joseph R Bennett [aut] (<https://orcid.org/0000-0002-3901-9513>)
 Maintainer: Jeffrey O Hanson <jeffrey.hanson@uqconnect.edu.au>
 Repository: CRAN
-Date/Publication: 2022-09-17 19:56:11 UTC
+Date/Publication: 2024-02-16 23:10:06 UTC
