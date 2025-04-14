@@ -2,7 +2,7 @@ citHeader("To cite the surveyvoi package in publications, please use:")
 
 bibentry(
   bibtype = "Article",
-  title = "wdpar: Interface to the World Database on Protected Areas",
+  title = "Optimizing ecological surveys for conservation",
   author = c(
     person(c("Jeffrey", "O"), "Hanson"),
     person(c("Jenny", "L"), "McCune"),
@@ -11,7 +11,7 @@ bibentry(
     person(c("Emma", "J"), "Hudgins"),
     person(c("Joseph", "R"), "Bennett")
   ),
-  year = "2022",
+  year = "2023",
   journal = "Journal of Applied Ecology",
   volume = "60",
   number = "1",

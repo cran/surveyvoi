@@ -1,3 +1,45 @@
+# surveyvoi 1.1.1
+
+- CRAN release.
+- Update `configure.ac` and `configure` files to remove bashisms.
+- Update package manual entry and vignette with citation information.
+- Update package manual entry with package website, issue tracker, and code
+  repository.
+- Update tests for `env_div_survey_scheme()` and `geo_cov_survey_scheme()`
+  to prevent tests from sporadically failing due to multiple optimal solutions.
+
+# surveyvoi 1.1.0.2
+
+- Fix bug in `fit_xgb_occupancy_models()` that caused an error during model
+  fitting due to failed predictions.
+- Fix package citation.
+
+# surveyvoi 1.1.0.1
+
+- Fix bug in `greedy_heuristic_algorithm()` function so that it returns a
+  solution if it is not possible to select enough planning units to meet the
+  target for any species. Instead of throwing an error, it will now throw a
+  warning and return a solution containing the cheapest set of planning units
+  within the budget and locked out constraints. Note that this solution
+  will have an objective value of zero, because it has zero probability of
+  meeting any of the species' targets.
+
+# surveyvoi 1.1.0.0
+
+- New `greedy_heuristic_algorithm()` function that can be used to generate
+  reserve selection prioritizations. This function provides access to the
+  internal algorithm used for the reserve selection component of the
+  value of information calculations.
+- Update internal greedy reserve selection algorithm to find better quality
+  prioritizations. This impacts `approx_near_optimal_survey_scheme()`,
+  `approx_optimal_survey_scheme()`, `optimal_survey_scheme()`,
+  `approx_evdsi()`, `evdsi()`, and `evdci()`.
+- Update `sim_sites` and `sim_features` example datasets.
+- Fix bug in `approx_near_optimal_survey_scheme()`,
+  `approx_optimal_survey_scheme()`, `optimal_survey_scheme()`,
+  `approx_evdsi()`, `evdsi()`, and `evdci()` where all species were incorrectly
+  assigned the same target as the first species during calculations.
+
 # surveyvoi 1.0.6
 
 - Fix installation for Windows on arm64 (#50).
